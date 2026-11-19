@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kinda Love Letter</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Homemade+Apple&family=Playfair+Display:ital,wght@1,500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f6ead2;--paper2:#e8d5af;--ink:#3b2216;--rose:#0a6c7e;--gold:#c9a05b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cormorant Garamond',Georgia,serif;background:radial-gradient(ellipse at 50% 20%,#06222b,#020b10 75%) fixed;color:var(--ink);overflow-x:hidden;padding-top:env(safe-area-inset-top,0px)}
+#petals,.fh{pointer-events:none}
+#petals{position:fixed;inset:0;z-index:1;overflow:hidden}
+.petal{position:absolute;top:-40px;opacity:0;background:radial-gradient(circle at 30% 30%,#2fb7b3,#0b5f73);border-radius:150% 0 150% 0;animation:fall linear forwards}
+@keyframes fall{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.75}100%{transform:translateY(110vh) translateX(var(--dx)) rotate(var(--sp));opacity:0}}
+.fh{position:fixed;z-index:30;color:var(--rose);animation:rise 1.8s ease-out forwards}
+@keyframes rise{to{transform:translate(var(--dx),-130px) scale(1.3);opacity:0}}
+
+/* envelope */
+#stage{position:relative;z-index:2;min-height:100dvh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:28px;padding:24px;transition:opacity 1s,transform 1s}
+#stage.gone{opacity:0;transform:scale(.9) translateY(-30px);pointer-events:none}
+.hint{font-family:'Playfair Display',serif;font-style:italic;color:var(--gold);letter-spacing:.08em;font-size:1.1rem;animation:pulse 2.4s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.envelope{position:relative;width:min(340px,82vw);aspect-ratio:3/2;background:linear-gradient(160deg,#e9d4a8,#d4b982);border-radius:6px;cursor:pointer;box-shadow:0 30px 60px rgba(0,0,0,.55);animation:float 4s ease-in-out infinite}
+@keyframes float{50%{translate:0 -10px}}
+.env-front{position:absolute;inset:0;border-radius:6px;z-index:3;background:linear-gradient(to top right,transparent 49.5%,rgba(120,80,40,.25) 50%,transparent 50.6%) left/50% 100% no-repeat,linear-gradient(to top left,transparent 49.5%,rgba(120,80,40,.25) 50%,transparent 50.6%) right/50% 100% no-repeat,linear-gradient(160deg,#ecd9ae,#d9bf89)}
+.flap{position:absolute;top:0;left:0;width:100%;height:55%;background:linear-gradient(#e2c895,#d0b27a);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;z-index:4;transition:transform .9s cubic-bezier(.6,0,.3,1),z-index 0s .45s}
+.open .flap{transform:rotateX(180deg);z-index:1}
+.seal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;z-index:5;background:radial-gradient(circle at 35% 30%,#1593a6,#064a5a);box-shadow:0 4px 10px rgba(0,0,0,.5);display:grid;place-items:center;color:#f6d9a0;font-size:1.6rem;transition:.5s}
+.open .seal{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
+.to{position:absolute;bottom:14%;width:100%;text-align:center;z-index:2;font-family:'Homemade Apple',cursive;font-size:.95rem;color:#6a3b25}
+
+/* letter */
+#wrap{position:relative;z-index:2;display:none;justify-content:center;padding:50px 16px 120px}
+#wrap.show{display:flex}
+.letter{position:relative;width:min(720px,100%);padding:clamp(32px,7vw,80px) clamp(22px,6vw,80px);background:radial-gradient(ellipse at 10% 5%,rgba(255,255,255,.55),transparent 50%),radial-gradient(ellipse at 95% 95%,rgba(150,100,40,.28),transparent 55%),repeating-linear-gradient(transparent 0,transparent 35px,rgba(110,80,50,.08) 36px),linear-gradient(170deg,var(--paper),var(--paper2));border-radius:4px;box-shadow:0 40px 80px rgba(0,0,0,.6),inset 0 0 70px rgba(140,100,50,.25);transform-origin:top;animation:unfold 1.4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes unfold{0%{transform:perspective(1200px) rotateX(-90deg) scaleY(.2);opacity:0}}
+.letter:before{content:'';position:absolute;left:clamp(14px,4vw,44px);top:0;bottom:0;width:2px;background:linear-gradient(transparent,rgba(10,108,126,.35) 6%,rgba(10,108,126,.35) 94%,transparent)}
+.date{text-align:right;font-family:'Homemade Apple',cursive;font-size:.85rem;color:rgba(59,34,22,.65);margin-bottom:30px}
+h1{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:clamp(1.9rem,6vw,3rem);color:var(--rose);text-align:center;line-height:1.15;margin-bottom:8px}
+.tl{display:inline-block;animation:drop .9s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes drop{0%{opacity:0;transform:translateY(-26px) rotate(-12deg);filter:blur(6px)}}
+.div{text-align:center;color:var(--gold);letter-spacing:.5em;margin-bottom:34px;font-size:.9rem}
+.div i{font-style:normal;display:inline-block;animation:tw 2s infinite}
+.div i:nth-child(2){animation-delay:.4s}.div i:nth-child(3){animation-delay:.8s}
+@keyframes tw{50%{transform:scale(1.6) rotate(45deg);opacity:.5}}
+.salute{font-family:'Homemade Apple',cursive;font-size:1.15rem;color:var(--rose);margin-bottom:24px}
+.salute b{display:inline-block;animation:beat 1.4s infinite}
+@keyframes beat{0%,60%,100%{transform:scale(1)}15%{transform:scale(1.3)}30%{transform:scale(1)}45%{transform:scale(1.2)}}
+.para{font-size:clamp(1.15rem,3.4vw,1.4rem);line-height:1.75;margin-bottom:1.2em}
+.w{display:inline-block;white-space:pre;opacity:0;filter:blur(5px);transform:translateY(8px);transition:opacity .7s,filter .7s,transform .7s}
+.w.in{opacity:1;filter:none;transform:none}
+.em{color:var(--rose);font-style:italic;font-weight:600}
+.fx{position:relative}
+
+/* word-level micro animations (start when the words appear) */
+.lit.fx-jolt .w{animation:jolt 3s infinite}
+@keyframes jolt{0%,85%,100%{transform:none}88%{transform:translate(-2px,1px) rotate(-8deg)}91%{transform:translate(3px,-1px) rotate(6deg)}94%{transform:translate(-2px,0) rotate(-4deg)}}
+.lit.fx-divine .w{animation:glow 3s ease-in-out infinite}
+@keyframes glow{50%{text-shadow:0 0 14px rgba(201,160,91,.95)}}
+.lit.fx-exotic .w{background:linear-gradient(90deg,#0a6c7e,#c9a05b,#2a7f7a,#1d4e9c,#0a6c7e);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hue 5s linear infinite}
+@keyframes hue{to{background-position:300% 0}}
+.lit.fx-free .w{animation:bob 2.6s ease-in-out infinite;animation-delay:var(--d)}
+.lit.fx-free .w:nth-child(2n){animation-delay:.5s}.lit.fx-free .w:nth-child(3n){animation-delay:1s}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.lit.fx-sparkle:after{content:'✦';position:absolute;top:-.5em;right:-.7em;font-size:.8em;color:var(--gold);font-style:normal;animation:spark 2s infinite var(--d)}
+@keyframes spark{0%,100%{transform:scale(0) rotate(0)}50%{transform:scale(1.4) rotate(90deg)}}
+.lit.fx-ignored .w{animation:fade 3s ease-in-out infinite}
+@keyframes fade{50%{opacity:.25}}
+.lit.fx-tick .w{animation:tick 2s steps(1) infinite}
+@keyframes tick{0%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.lit.fx-death .w{animation:dark 4s ease-in-out infinite}
+@keyframes dark{50%{color:#000;letter-spacing:.08em;opacity:.55}}
+.lit.fx-up .w{animation:up 2s ease-in-out infinite}
+.lit.fx-down .w{animation:down 2s ease-in-out infinite}
+@keyframes up{50%{transform:translateY(-7px)}}@keyframes down{50%{transform:translateY(7px)}}
+.lit.fx-brake .w{animation:brake 2.6s infinite}
+@keyframes brake{0%,35%,75%,100%{text-shadow:none;transform:none}45%,65%{text-shadow:0 0 10px #f22;color:#c11;transform:scaleX(.9)}}
+.fx-underline{background:linear-gradient(var(--rose),var(--rose)) no-repeat 0 100%/0 2px;transition:background-size 2s ease .4s}
+.fx-underline.lit{background-size:100% 2px}
+.lit.fx-fake .w{animation:glitch 3s infinite var(--d)}
+@keyframes glitch{0%,90%,100%{transform:none;text-shadow:none}92%{transform:translate(-2px,0);text-shadow:2px 0 #e33,-2px 0 #39f}95%{transform:translate(2px,1px) skewX(10deg);text-shadow:-2px 0 #e33,2px 0 #39f}}
+.lit.fx-love .w{animation:beat 1.4s infinite}
+
+/* doodles */
+.doodle{display:block;width:min(420px,100%);margin:0 auto 40px;opacity:0;transform:translateY(18px);transition:opacity 1s,transform 1s;overflow:visible}
+.doodle.seen{opacity:1;transform:none}
+.doodle *{animation-play-state:paused}.doodle.seen *{animation-play-state:running}
+.doodle .draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 2.6s ease}
+.doodle.seen .draw{stroke-dashoffset:0}
+.fb{transform-box:fill-box}
+.node{animation:np 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes np{50%{transform:scale(1.6)}}
+.bird{animation:fly 7s ease-in-out infinite}
+@keyframes fly{0%{transform:translate(170px,92px);opacity:0}4%,22%{transform:translate(170px,92px);opacity:1}55%{transform:translate(270px,40px)}88%{transform:translate(380px,8px);opacity:1}100%{transform:translate(395px,0);opacity:0}}
+.wing{transform-box:fill-box;transform-origin:80% 100%;animation:flap .3s ease-in-out infinite alternate}
+@keyframes flap{from{transform:rotate(-35deg)}to{transform:rotate(25deg)}}
+.door{transform-box:fill-box;transform-origin:left;animation:door 7s infinite}
+@keyframes door{0%,12%,95%,100%{transform:scaleX(1)}22%,85%{transform:scaleX(.15)}}
+.bf{animation:drift 6s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate(50px,88px)}33%{transform:translate(85px,66px)}66%{transform:translate(35px,60px)}}
+.wl,.wr{transform-box:fill-box;animation:wg .45s ease-in-out infinite alternate}
+.wl{transform-origin:right}.wr{transform-origin:left}
+@keyframes wg{to{transform:scaleX(.2)}}
+.hand-m{transform-origin:60px 65px;animation:spin 6s linear infinite}.hand-h{transform-origin:60px 65px;animation:spin 48s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.road{stroke-dasharray:10 10;animation:rd 1s linear infinite}
+@keyframes rd{to{stroke-dashoffset:-20}}
+.car{animation:drive 7s linear infinite}
+@keyframes drive{0%{transform:translate(125px,80px);opacity:0}5%{opacity:1}40%{transform:translate(250px,80px)}46%,70%{transform:translate(268px,80px)}100%{transform:translate(385px,80px);opacity:0}}
+.wheel{transform-box:fill-box;transform-origin:center;animation:wr 7s linear infinite}
+@keyframes wr{40%{transform:rotate(720deg)}46%,70%{transform:rotate(800deg)}100%{transform:rotate(1360deg)}}
+.bl{fill:#5a1a22;animation:bl 7s infinite}
+@keyframes bl{0%,38%,72%,100%{fill:#5a1a22}40%,70%{fill:#ff3b4e}}
+.armL,.armR{transition:transform 1.8s cubic-bezier(.3,.8,.3,1)}
+.armL{transform:translateX(-130px)}.armR{transform:translateX(130px)}
+.seen .armL,.seen .armR{transform:none}
+.big{transform-box:fill-box;transform-origin:center;transform:scale(0)}
+.seen .big{animation:pop 1s 1.6s cubic-bezier(.3,1.6,.5,1) forwards,beat 1.4s 2.6s infinite}
+@keyframes pop{to{transform:scale(1)}}
+.sm{animation:fl 3s ease-in infinite;opacity:0}
+@keyframes fl{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-60px);opacity:0}}
+
+/* ending */
+.rev{opacity:0;transition:opacity 1.4s}.rev.in{opacity:1}
+.sign{margin-top:30px;text-align:right}
+.sign .with{font-style:italic;font-size:1.2rem}
+.sign .name{display:inline-block;font-family:'Homemade Apple',cursive;font-size:1.6rem;color:var(--rose);margin-top:8px;clip-path:inset(-10% 100% -10% 0);transition:clip-path 2.2s ease .8s}
+.sign.in .name{clip-path:inset(-10% -5% -10% 0)}
+.heart-end{display:block;text-align:center;font-size:2.4rem;margin-top:26px;color:var(--rose)}
+.heart-end.in{animation:beat 1.4s infinite}
+
+/* ui */
+#prog{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;height:3px;z-index:20;display:none}
+#bar{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--rose))}
+#ph{position:absolute;top:-6px;left:0;color:var(--rose);font-size:14px;transform:translateX(-50%)}
+#cue{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:10;color:var(--gold);font-family:'Playfair Display',serif;font-style:italic;text-align:center;display:none;transition:opacity .6s;animation:bounce 1.8s infinite}
+@keyframes bounce{50%{margin-bottom:-8px}}
+#replay{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:10;display:none;background:rgba(246,234,210,.12);color:var(--gold);border:1px solid rgba(201,160,91,.5);backdrop-filter:blur(6px);padding:8px 14px;border-radius:30px;font:1rem 'Cormorant Garamond',serif;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.w{opacity:1;filter:none;transform:none}.doodle{opacity:1;transform:none}.doodle .draw{stroke-dashoffset:0}.armL,.armR,.big{transform:none}}
+</style>
+</head>
+<body>
+<div id="petals"></div>
+<div id="prog"><i id="bar"></i><b id="ph">♥</b></div>
+
+<section id="stage">
+  <div class="envelope" id="env" role="button" tabindex="0" aria-label="Open the letter">
+    <div class="env-front"></div><div class="to">for my goddess</div><div class="flap"></div><div class="seal">♥</div>
+  </div>
+  <div class="hint" style="animation:none;opacity:.7;font-size:.95rem">tap the envelope</div>
+</section>
+
+<main id="wrap">
+<article class="letter" id="letter">
+  <div class="date" id="date"></div>
+  <h1 id="title">Kinda Love Letter</h1>
+  <div class="div"><i>✦</i> <i>✦</i> <i>✦</i></div>
+  <div class="salute">My Devu, <b>♥</b></div>
+
+  <p class="para">I don’t like rules, I like to <span class="fx fx-jolt">break</span> them, but there are certain beautiful ways of trust I believe in, again not rules but signs of believing in someone special. Please comprehend my love for you, I shall do the same to what you have for me, that’s our job, we will never come to an end of it but we will both have a journey, which is the <span class="em fx fx-divine">divine process of loving each other.</span></p>
+
+  <svg class="doodle" viewBox="0 0 400 110" aria-hidden="true">
+    <path class="draw" pathLength="1" fill="none" stroke="#c9a05b" stroke-width="2.5" stroke-linecap="round" d="M20 80C90 5 130 115 200 58S320 10 380 55"/>
+    <circle class="node" cx="20" cy="80" r="6" fill="#0a6c7e"/><circle class="node" cx="380" cy="55" r="6" fill="#0a6c7e"/>
+    <text text-anchor="middle" font-size="18" fill="#0a6c7e" dy=".35em">♥<animateMotion dur="6s" repeatCount="indefinite" path="M20 80C90 5 130 115 200 58S320 10 380 55"/></text>
+  </svg>
+
+  <p class="para">You are my <span class="fx fx-exotic">exotic amusement</span>, but I don’t want to put you in a cage, you are <span class="em fx fx-free">free as it gets,</span> because you are an entity of personality, individuality &amp; novelty, you are free to choose where you wanna be , at anytime you think is right with an environment you feel great in, because if you don’t, it’s better to be with me cause nothing is better than being with an individual who is constantly trying to be better to impress you in ways the creative spirit may allow, the only requirement is let me know of your place, not to control, but to understand where I can get the blessing of my <span class="fx fx-sparkle">goddess</span>, enrich myself, to devote myself &amp; delve into.</p>
+
+  <svg class="doodle" viewBox="0 0 400 130" aria-hidden="true">
+    <g transform="translate(60 0)" fill="none" stroke="#7a4a2a" stroke-width="2" stroke-linecap="round">
+      <path d="M110 4V16M64 105H156" stroke-width="3"/><circle cx="110" cy="19" r="3"/>
+      <path d="M70 105V62Q70 26 110 22Q150 26 150 62V105M84 105V38M97 105V30M123 105V30M136 105V38"/>
+      <path class="door" d="M97 58H123V105" stroke="#0a6c7e"/>
+    </g>
+    <g class="bird"><ellipse rx="7" ry="5" fill="#c9a05b"/><circle cx="6" cy="-4" r="3.2" fill="#c9a05b"/><path d="M9-4l4 1.2-4 1" fill="#0a6c7e"/><path class="wing" d="M-2-1Q-8-10-14-6Q-8-2-2 2Z" fill="#0a6c7e"/></g>
+    <g class="bf"><path class="wl" fill="#0a6c7e" opacity=".85" d="M0 0C-14-14-26-6-20 4C-16 12-6 10 0 2Z"/><path class="wr" fill="#c9a05b" opacity=".9" d="M0 0C14-14 26-6 20 4C16 12 6 10 0 2Z"/></g>
+  </svg>
+
+  <p class="para">I can feel <span class="fx fx-ignored">ignored</span> by the world but ignored by myself is not something I can accept, my better half is myself, of course. <span class="fx fx-tick">Time</span> is a very crucial layer to life, maybe its foundation, as to be poetic, we all are travellers to <span class="fx fx-death">Death</span>, the only baggage we carry is time, robbed by life or elements of life. People are an element of life, of the most consuming kind, so we have to build a taste in people so that at the end we have no regrets. Well with your taste in people you have chosen someone with a lot of patterns, patterns of emotions, ideas &amp; experiences which has its <span class="fx fx-up">ups</span> &amp; <span class="fx fx-down">downs</span> but if you hold on to it, you may feel it as right vehicle to travel with, but the only fuel is to let know when you pull down the <span class="fx fx-brake">breaks</span>, <span class="em fx fx-underline">not a sign of domination but a sign of respect to time.</span></p>
+
+  <svg class="doodle" viewBox="0 0 400 130" aria-hidden="true">
+    <circle cx="60" cy="65" r="40" fill="none" stroke="#3b2216" stroke-width="3"/>
+    <path d="M60 28V34M60 96V102M23 65H29M91 65H97" stroke="#3b2216" stroke-width="2.5"/>
+    <line class="hand-h" x1="60" y1="65" x2="60" y2="47" stroke="#3b2216" stroke-width="3.5" stroke-linecap="round"/>
+    <line class="hand-m" x1="60" y1="65" x2="60" y2="36" stroke="#0a6c7e" stroke-width="2.5" stroke-linecap="round"/>
+    <line class="road" x1="130" y1="110" x2="395" y2="110" stroke="#3b2216" stroke-width="2"/>
+    <g class="car"><rect x="0" y="12" width="46" height="14" rx="5" fill="#0a6c7e"/><path d="M9 12L15 2H33L40 12Z" fill="#0a6c7e"/><path d="M17 11L20 4H25V11ZM28 11V4H31L35 11Z" fill="#f6ead2"/><rect class="bl" x="-3" y="15" width="4" height="6" rx="1"/>
+      <g transform="translate(11 28)"><g class="wheel"><circle r="5.5" fill="#3b2216"/><path d="M-4 0H4" stroke="#f6ead2" stroke-width="1.5"/></g></g>
+      <g transform="translate(36 28)"><g class="wheel"><circle r="5.5" fill="#3b2216"/><path d="M-4 0H4" stroke="#f6ead2" stroke-width="1.5"/></g></g></g>
+  </svg>
+
+  <p class="para"><span class="fx fx-fake">Lies</span> are a way to pass life through, but when you realise it all is <span class="fx fx-fake">fake</span> you realise you are <span class="fx fx-fake">fake</span> with yourself, with your existence, that’s not feasible for a person who feels <span class="fx fx-sparkle">blessed</span> because of your existence, who considers you as the biggest part of his reality, just don’t <span class="fx fx-fake">fake</span> it, because at the end I just wanna <span class="em fx fx-underline">hold your hands, make love till time fads out,</span> in the breaks, build a world I want us to live in with trust, genuineness &amp; a sense of <span class="em fx fx-love">I Love you!</span></p>
+
+  <svg class="doodle" viewBox="0 0 400 110" aria-hidden="true">
+    <g class="armL"><path d="M10 85H190" stroke="#0a6c7e" stroke-width="14" stroke-linecap="round"/></g>
+    <g class="armR"><path d="M390 85H210" stroke="#c9a05b" stroke-width="14" stroke-linecap="round"/></g>
+    <text class="big" x="200" y="50" text-anchor="middle" font-size="34" fill="#0a6c7e">♥</text>
+    <text class="sm" x="160" y="60" font-size="12" fill="#0a6c7e">♥</text>
+    <text class="sm" x="235" y="60" font-size="14" fill="#c9a05b" style="animation-delay:1s">♥</text>
+    <text class="sm" x="198" y="60" font-size="10" fill="#0a6c7e" style="animation-delay:2s">♥</text>
+  </svg>
+
+  <div class="sign rev" id="sign"><div class="with">Forever yours,</div><span class="name">— Me</span></div>
+  <span class="heart-end rev" id="heartEnd">♥</span>
+</article>
+</main>
+
+<div id="cue">scroll down<br>↓</div>
+<button id="replay">↻ Replay</button>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var env=$('env'),stage=$('stage'),wrap=$('wrap'),cue=$('cue'),prog=$('prog'),bar=$('bar'),ph=$('ph'),
+      replay=$('replay'),letter=$('letter'),petals=$('petals'),title=$('title');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var paras=[].slice.call(document.querySelectorAll('.para')),orig=paras.map(function(p){return p.innerHTML});
+  var words=[],idx=0,ready=false,titleText=title.textContent;
+  $('date').textContent=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  function petal(){var p=document.createElement('div'),s=8+Math.random()*14;p.className='petal';
+    p.style.cssText='width:'+s+'px;height:'+s*1.3+'px;left:'+Math.random()*100+'vw;animation-duration:'+(7+Math.random()*7)+'s';
+    p.style.setProperty('--dx',(Math.random()*160-80)+'px');p.style.setProperty('--sp',(Math.random()*720-360)+'deg');
+    petals.appendChild(p);setTimeout(function(){p.remove()},15000)}
+  function hearts(x,y,n){for(var i=0;i<n;i++){var h=document.createElement('span');h.className='fh';h.textContent='♥';
+    h.style.cssText='left:'+(x+Math.random()*30-15)+'px;top:'+y+'px;font-size:'+(12+Math.random()*16)+'px;animation-delay:'+(i*60)+'ms';
+    h.style.setProperty('--dx',(Math.random()*90-45)+'px');document.body.appendChild(h);setTimeout(function(h){h.remove()}.bind(null,h),2600)}}
+  if(!reduce){setInterval(petal,900);for(var i=0;i<6;i++)setTimeout(petal,i*250)}
+
+  function build(){
+    title.innerHTML='';
+    titleText.split('').forEach(function(c,i){if(c===' '){title.appendChild(document.createTextNode(' '));return}
+      var s=document.createElement('span');s.className='tl';s.textContent=c;s.style.animationDelay=(700+i*55)+'ms';title.appendChild(s)});
+    paras.forEach(function(p,i){p.innerHTML=orig[i];
+      var wk=document.createTreeWalker(p,NodeFilter.SHOW_TEXT),ns=[];while(wk.nextNode())ns.push(wk.currentNode);
+      ns.forEach(function(n){var f=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(function(t){if(!t)return;
+          if(/^\s+$/.test(t)){f.appendChild(document.createTextNode(' '));return}
+          var s=document.createElement('span');s.className='w';s.textContent=t;f.appendChild(s)});
+        n.parentNode.replaceChild(f,n)});
+      [].forEach.call(p.querySelectorAll('.fx'),function(x){x.style.setProperty('--d',(Math.random()*2).toFixed(2)+'s')})});
+    words=[].slice.call(document.querySelectorAll('.para .w'));idx=0;
+    ['sign','heartEnd'].forEach(function(i){$(i).classList.remove('in')});
+    [].forEach.call(document.querySelectorAll('.doodle'),function(d){d.classList.remove('seen')});
+  }
+
+  // scroll-driven reveal: words appear as they cross a line near the bottom of the screen
+  function update(){
+    if(!ready)return;
+    var line=innerHeight*.82,k=0;
+    while(idx<words.length){var w=words[idx],r=w.getBoundingClientRect();
+      if(r.top>line)break;
+      w.style.transitionDelay=Math.min(k++,18)*35+'ms';w.classList.add('in');
+      var fx=w.closest('.fx');
+      if(fx&&!fx.classList.contains('lit')){fx.classList.add('lit');
+        if(fx.classList.contains('fx-love')){var b=fx.getBoundingClientRect();hearts(b.left+b.width/2,b.top,16)}}
+      idx++}
+    var max=document.documentElement.scrollHeight-innerHeight,p=max>0?Math.min(1,scrollY/max):0;
+    bar.style.width=p*100+'%';ph.style.left=p*100+'%';
+    cue.style.opacity=scrollY>40?0:1;
+  }
+  var tick=false;
+  addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){tick=false;update();if(!reduce&&Math.random()<.3)petal()})},{passive:true});
+  addEventListener('resize',update);
+
+  // doodles + signature reveal when they enter the screen
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.target.classList.contains('doodle'))e.target.classList.toggle('seen',e.isIntersecting);
+    else if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.4});
+  [].forEach.call(document.querySelectorAll('.doodle,.rev'),function(n){io.observe(n)});
+  $('sign').addEventListener('transitionend',function(){});
+
+  letter.addEventListener('click',function(e){hearts(e.clientX,e.clientY,3)});
+
+  function start(){
+    stage.style.display='none';wrap.classList.add('show');prog.style.display='block';cue.style.display='block';replay.style.display='block';
+    scrollTo(0,0);build();ready=false;setTimeout(function(){ready=true;update()},1700);
+  }
+  function open(){
+    if(env.classList.contains('open'))return;env.classList.add('open');
+    for(var i=0;i<30;i++)setTimeout(petal,i*60);
+    setTimeout(function(){stage.classList.add('gone')},1900);setTimeout(start,2900)}
+  env.addEventListener('click',open);
+  env.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
+
+  replay.addEventListener('click',function(){
+    scrollTo(0,0);ready=false;letter.style.animation='none';void letter.offsetWidth;letter.style.animation='';
+    build();cue.style.opacity=1;for(var i=0;i<20;i++)setTimeout(petal,i*60);
+    setTimeout(function(){ready=true;update()},1700)});
+})();
+</script>
+</body>
+</html>
